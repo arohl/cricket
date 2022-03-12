@@ -5,7 +5,7 @@
 # <bitbar.author>Andrew Rohl</bitbar.author>
 # <bitbar.author.github>arohl</bitbar.author.github>
 # <bitbar.desc>Finds a cricket team's matches</bitbar.desc>
-# <bitbar.dependencies>python3</bitbar.dependencies>
+# <bitbar.dependencies>python3 requests</bitbar.dependencies>
 
 import requests
 import json
