@@ -14,7 +14,7 @@ import errno
 import json
 import os
 
-config_file = "cricket.config"
+config_file = ".cricket.config"
 
 def convert_date(date):
     return (parse(date).astimezone())

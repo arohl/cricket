@@ -14,7 +14,7 @@ import os
 
 my_team = "AUS"
 matches_url = "https://hs-consumer-api.espncricinfo.com/v1/pages/matches/current?lang=en&latest=true"
-config_file = "cricket.config"
+config_file = ".cricket.config"
 config_with_path = f"{os.environ['SWIFTBAR_PLUGINS_PATH']}/{config_file}"
 
 page = requests.get(matches_url)
