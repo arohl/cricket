@@ -86,12 +86,19 @@ for i in range(n_innings):
 
 print(innings[-1].emojize_score())
 print("---")
+
 print(f"{match_json['match']['series']['alternateName']}: {match_json['match']['title']}, {match_json['match']['ground']['smallName']} | color = royalblue")
 print(f"{match_json['match']['statusText']} | color = black")
 for batter in match_json['scorecard']['innings'][n_innings-1]['inningBatsmen']:
     if (not batter['battedType'] == 'DNB'):
         if (not batter['isOut']):
             print(f"{batter['player']['name']} {batter['runs']}({batter['balls']}) | color = black")
+
 print("---")
 for score in innings:
     print(f"{score} | color = black")
+
+print("---")
+print("Web sites | color=royalblue")
+print("Cricinfo | color=black href=https://www.espncricinfo.com")
+print("Cricket.com.au | color=black href=https://www.cricket.com.au")
