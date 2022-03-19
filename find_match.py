@@ -17,6 +17,11 @@ matches_url = "https://hs-consumer-api.espncricinfo.com/v1/pages/matches/current
 config_file = ".cricket.config"
 config_with_path = f"{os.environ['SWIFTBAR_PLUGINS_PATH']}/{config_file}"
 
+try:
+    os.remove(config_with_path)
+except:
+    pass
+
 page = requests.get(matches_url)
 matches_json = page.json()
 
@@ -30,13 +35,11 @@ for match in matches_json['matches']:
             away_team = match['teams'][1]['team']['name']
             match_id = match['objectId']
             series_id = match['series']['objectId']
+
 if found:
     config = {'seriesId': series_id, 'matchId': match_id, 'homeTeam': home_team, 'awayTeam': away_team, 'startTime': start_time}
-
-try:
-    os.remove(config_with_path)
-except:
-    pass
+else:
+    exit()
 
 with open(config_with_path, 'w') as f:
     json.dump(config, f)
