@@ -61,7 +61,7 @@ config = json.load(f)
 start_time = convert_date(config['startTime'])
 wait_for_start = start_time - datetime.datetime.now().astimezone()
 if wait_for_start.total_seconds() > 0:
-    days, hours, mins = days_hours_minutes(waitForStart)
+    days, hours, mins = days_hours_minutes(wait_for_start)
     _home_team = prepare_for_emojize(config['homeTeam'])
     _away_team = prepare_for_emojize(config['awayTeam'])
     if days > 0:
@@ -69,7 +69,7 @@ if wait_for_start.total_seconds() > 0:
     else:
         print(f":{_home_team}: v :{_away_team}: {hours}:{mins:02} | symbolize=false")
     print("---")
-    date_time = startTime.strftime("%a %b %d at %-I:%M %p")
+    date_time = start_time.strftime("%a %b %d at %-I:%M %p")
     print(f"{config['homeTeam']} vs {config['awayTeam']} starts on {date_time} | color = royalblue")
     exit()
 
