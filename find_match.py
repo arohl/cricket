@@ -1,4 +1,4 @@
-#!/usr/bin/env -P/Users/andrew/.asdf/shims/python3:/opt/local/bin/:/Users/andrew/opt/anaconda3/bin:/Users/andrew/anaconda3/bin:/Users/180341c/opt/anaconda3/bin/    python3
+#!/usr/bin/env -P/Users/andrew/.asdf/shims/:/Users/180341c/.asdf/shims/ python
 
 # <bitbar.title>Companion program for Cricket</bitbar.title>
 # <bitbar.version>v0.1</bitbar.version>
