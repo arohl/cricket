@@ -232,9 +232,8 @@ for score in innings:
         print(f"Can't open file {innings_with_path} with error {err.errno}")
         exit()
     print(html_table_header, file = innings_file)
-    #TODO need to calculate height of webview - there are always 11 batters but need to know how many bowlers listed
-    width = 515
-    print(f"{score} | href=\"file://{pathname2url(innings_with_path)}\" webview=true webvieww=680 webviewh={width}")
+    height = 550 + 44*(score.n_bowler + 1)
+    print(f"{score} | href=\"file://{pathname2url(innings_with_path)}\" webview=true webvieww=680 webviewh={height}")
     score.print_batting(innings_file)
     score.print_bowling(innings_file)
     print(html_table_footer, file = innings_file)
