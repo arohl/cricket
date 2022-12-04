@@ -129,7 +129,7 @@ class Innings:
         if self.wickets < 10:
             return f":{_team}: {self.runs}/{self.wickets} | symbolize=false"
         else:
-            return f":{_team}: {self.team} {self.runs} | symbolize=false"
+            return f":{_team}: {self.runs} | symbolize=false"
 
     def print_batting(self, out_file):
         scorecard = PrettyTable()
