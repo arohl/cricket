@@ -69,7 +69,7 @@ def days_hours_minutes(td):
 
 
 def prepare_for_emojize(s):
-    return s.replace(" ", "_").lower()
+    return s.replace(" ", "_").lower().replace("west_indies","palm_tree")
 
 
 def replace_none(field):
