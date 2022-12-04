@@ -216,91 +216,101 @@ match_json = page.json()
 # read through JSON and put relevent entries into data structure
 innings_json = match_json["scorecard"]["innings"]
 n_innings = len(innings_json)
-innings = []
 
-for i in range(n_innings):
-    # store team score
-    inning = Innings(
-        innings_json[i]["team"]["name"],
-        innings_json[i]["runs"],
-        innings_json[i]["wickets"],
-    )
-    # store individual batsmen stats
-    for batter in innings_json[i]["inningBatsmen"]:
-        if batter["dismissalText"] == None:
-            dismissal = ""
-        else:
-            dismissal = batter["dismissalText"]["short"]
-        if batter["strikerate"] == None:
-            strike_rate = ""
-        else:
-            strike_rate = f"{batter['strikerate']:.2f}"
-        inning.batting_scorecard.append(
-            BattingScore(
-                batter["player"]["name"],
-                dismissal,
-                replace_none(batter["runs"]),
-                replace_none(batter["balls"]),
-                replace_none(batter["sixes"]),
-                replace_none(batter["fours"]),
-                strike_rate,
-                batter["battedType"],
-                batter["isOut"],
-            )
+if n_innings == 0:
+    _home_team = prepare_for_emojize(config["homeTeam"])
+    _away_team = prepare_for_emojize(config["awayTeam"])
+    print(f":{_home_team}: v :{_away_team}: | symbolize=false")
+    print("---")
+    print(match_json['match']['status'])
+
+else:
+
+    innings = []
+
+    for i in range(n_innings):
+        # store team score
+        inning = Innings(
+            innings_json[i]["team"]["name"],
+            innings_json[i]["runs"],
+            innings_json[i]["wickets"],
         )
-    # store individual bowler stats
-    n_bowler = 0
-    for bowler in innings_json[i]["inningBowlers"]:
-        economy = f"{bowler['economy']:.2f}"
-        inning.bowling_scorecard.append(
-            BowlingScore(
-                bowler["player"]["name"],
-                bowler["overs"],
-                bowler["conceded"],
-                bowler["wickets"],
-                economy,
+        # store individual batsmen stats
+        for batter in innings_json[i]["inningBatsmen"]:
+            if batter["dismissalText"] == None:
+                dismissal = ""
+            else:
+                dismissal = batter["dismissalText"]["short"]
+            if batter["strikerate"] == None:
+                strike_rate = ""
+            else:
+                strike_rate = f"{batter['strikerate']:.2f}"
+            inning.batting_scorecard.append(
+                BattingScore(
+                    batter["player"]["name"],
+                    dismissal,
+                    replace_none(batter["runs"]),
+                    replace_none(batter["balls"]),
+                    replace_none(batter["sixes"]),
+                    replace_none(batter["fours"]),
+                    strike_rate,
+                    batter["battedType"],
+                    batter["isOut"],
+                )
             )
-        )
-        n_bowler = n_bowler + 1
-    inning.n_bowler = n_bowler
-    # add team and individual stats to list of innings
-    innings.append(inning)
+        # store individual bowler stats
+        n_bowler = 0
+        for bowler in innings_json[i]["inningBowlers"]:
+            economy = f"{bowler['economy']:.2f}"
+            inning.bowling_scorecard.append(
+                BowlingScore(
+                    bowler["player"]["name"],
+                    bowler["overs"],
+                    bowler["conceded"],
+                    bowler["wickets"],
+                    economy,
+                )
+            )
+            n_bowler = n_bowler + 1
+        inning.n_bowler = n_bowler
+        # add team and individual stats to list of innings
+        innings.append(inning)
 
 
-print(innings[-1].emojize_score())
-print("---")
+    print(innings[-1].emojize_score())
+    print("---")
 
-print(
-    f"{match_json['match']['series']['alternateName']}: {match_json['match']['title']}, {match_json['match']['ground']['smallName']} | color = royalblue"
-)
-print(f"{match_json['match']['statusText']} | color = black")
-for batter in innings[-1].batting_scorecard:
-    if not batter.type == "DNB":
-        if not batter.is_out:
-            print(f"{batter.name} {batter.runs}({batter.balls}) | color = black")
-
-print("---")
-
-i = 0
-# loop through the innings
-for score in innings:
-    innings_with_path = (
-        f"{environ['SWIFTBAR_PLUGIN_DATA_PATH']}/{innings_file_prefix}_{i+1}.html"
-    )
-    try:
-        innings_file = open(innings_with_path, "w")
-    except OSError as err:
-        print(f"Can't open file {innings_with_path} with error {err.errno}")
-        exit()
-    print(html_table_header, file=innings_file)
-    height = 550 + 44 * (score.n_bowler + 1)
     print(
-        f'{score} | href="file://{pathname2url(innings_with_path)}" webview=true webvieww=680 webviewh={height}'
+        f"{match_json['match']['series']['alternateName']}: {match_json['match']['title']}, {match_json['match']['ground']['smallName']} | color = royalblue"
     )
-    score.print_batting(innings_file)
-    score.print_bowling(innings_file)
-    print(html_table_footer, file=innings_file)
-    i = i + 1
+    print(f"{match_json['match']['statusText']} | color = black")
+    for batter in innings[-1].batting_scorecard:
+        if not batter.type == "DNB":
+            if not batter.is_out:
+                print(f"{batter.name} {batter.runs}({batter.balls}) | color = black")
+
+    print("---")
+
+    i = 0
+    # loop through the innings
+    for score in innings:
+        innings_with_path = (
+            f"{environ['SWIFTBAR_PLUGIN_DATA_PATH']}/{innings_file_prefix}_{i+1}.html"
+        )
+        try:
+            innings_file = open(innings_with_path, "w")
+        except OSError as err:
+            print(f"Can't open file {innings_with_path} with error {err.errno}")
+            exit()
+        print(html_table_header, file=innings_file)
+        height = 550 + 44 * (score.n_bowler + 1)
+        print(
+            f'{score} | href="file://{pathname2url(innings_with_path)}" webview=true webvieww=680 webviewh={height}'
+        )
+        score.print_batting(innings_file)
+        score.print_bowling(innings_file)
+        print(html_table_footer, file=innings_file)
+        i = i + 1
 
 print("---")
 print("Web sites | color=royalblue")
