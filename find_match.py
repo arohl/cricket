@@ -11,6 +11,7 @@ import requests
 import json
 import errno
 import os
+from fake_useragent import UserAgent
 
 my_team = "AUS"
 matches_url = "https://hs-consumer-api.espncricinfo.com/v1/pages/matches/current?lang=en&latest=true"
@@ -22,7 +23,9 @@ try:
 except:
     pass
 
-page = requests.get(matches_url)
+ua = UserAgent()
+headers = {'User-Agent': ua.safari}
+page = requests.get(matches_url, headers=headers)
 matches_json = page.json()
 
 found = False
@@ -35,6 +38,8 @@ for match in matches_json["matches"]:
             away_team = match["teams"][1]["team"]["name"]
             match_id = match["objectId"]
             series_id = match["series"]["objectId"]
+    if found:
+        break
 
 if found:
     config = {
